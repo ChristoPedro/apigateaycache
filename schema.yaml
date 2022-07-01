@@ -1,0 +1,362 @@
+title: "Create API Gateway and a Redis Server"
+stackDescription: "Deploy a API Gateway with a Redis for caching"
+schemaVersion: 1.1.0
+version: "20220107"
+locale: "br"
+
+variableGroups:
+- title: General Configuration
+  visible: false
+  variables:
+  - tenancy_ocid
+  - region
+  - network_cidrs
+
+- title: Required Configuration
+  visible: true  
+  variables:
+  - compartment_id
+  - create_api_gw
+
+- title: Api Gateway Configuration
+  visible: create_api_gw
+  variables:
+  - api-gateway-name
+  - api-gateway-type
+
+- title: Redis Host Configuration
+  visible: true
+  variables:
+  - instance_shape
+  - instance_shape_config_ocpus
+  - instance_shape_config_memory_in_gbs
+  - availablity_domain_name
+  
+- title: Network
+  visible: true
+  variables:
+  - create_new_network
+  - vcn_cidr
+  - private_subnet_cidir
+  - public_subnet_cidir
+  - vcnCompartment
+  - vcnDeployment
+  - subnetCompartment
+  - redis_subnet_OCID
+  - subnetCompartmentapi
+  - api_gateway_subnec_OCID
+  - create_private_endpoint
+
+- title: Private Endpoint
+  visible:
+    eq:
+      - create_private_endpoint
+      - false
+  variables:
+  - private_endpoint_vcnCompartment
+  - private_endpoint_vcn
+  - private_endpoint_Compartment
+  - private_endpoint_id
+
+- title: Vault
+  visible: true
+  variables:
+  - create_new_vault
+  - vault_name
+  - key_name
+  - vaultCompartment
+  - vault_id
+  - keyCompartment
+  - key_id
+  - secret_name
+
+variables:
+
+  create_api_gw:
+    type: boolean
+    title: "Create a new API Gateway?"
+    visible: true
+    default: true
+
+  compartment_id:
+    type: oci:identity:compartment:id
+    required: true
+    visible: true
+    title: "Compartment"
+    description: "Choose compartment where you want to create the solution resources"
+
+  region:
+    type: oci:identity:region:name
+    required: true
+    visible: true
+    title: "Region"
+    description: "Choose region where you want to deploy the resources defined by this stack."
+
+  
+  #Create API GW
+
+  api-gateway-name:
+    type: string
+    default: ApiGW
+    title: API Gateway Name
+
+  api-gateway-type:
+    type: enum
+    default: PUBLIC
+    enum:
+      - PUBLIC
+      - PRIVATE
+  
+  # Redis Host
+
+  instance_shape:
+    type: oci:core:instanceshape:name
+    title: "Select a shape for the Redis Host"
+    required: true
+    dependsOn:
+      compartmentId: compartment_id
+    visible: true
+  
+  instance_shape_config_ocpus:
+    type: integer
+    minimum: 1
+    maximum: 64
+    title: "Number of OCPUs"
+    visible:
+      or:
+        - eq:
+          - instance_shape 
+          - "VM.Standard.E3.Flex"
+        - eq:
+          - instance_shape 
+          - "VM.Standard.E4.Flex"
+        - eq:
+          - instance_shape 
+          - "VM.Standard.A1.Flex"
+
+  instance_shape_config_memory_in_gbs:
+    type: integer
+    minimum: 1
+    maximum: 1024
+    title: "Amount of memory (GB)"
+    visible:
+      or:
+        - eq:
+          - instance_shape 
+          - "VM.Standard.E3.Flex"
+        - eq:
+          - instance_shape 
+          - "VM.Standard.E4.Flex"
+        - eq:
+          - instance_shape 
+          - "VM.Standard.A1.Flex"
+
+  availablity_domain_name:
+    type: oci:identity:availabilitydomain:name
+    required: true
+    visibile: true
+    title: "Availability Domain"
+    description: "Choose availability Domain to be chosen for deploy of Redis compute instances."
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+
+# Network
+  
+  create_new_network:
+    type: boolean
+    title: "Create new Network?"
+    required: true
+    default: true
+
+  vcn_cidr:
+    type: string
+    requited: false
+    title: "VCN CIRD Block"
+    default: "10.0.0.0/16"
+    visible: create_new_network
+
+  private_subnet_cidir:
+    type: string
+    requited: false
+    visible: create_new_network
+    title: "Private Subnet CIRD Block"
+    default: "10.0.1.0/24"
+  
+  public_subnet_cidir:
+    type: string
+    requited: false
+    visible: create_new_network
+    title: "Public Subnet CIRD Block"
+    default: "10.0.0.0/24"
+
+  vcnCompartment:
+    type: oci:identity:compartment:id
+    title: Compartimento da VCN
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+  
+  vcnDeployment:
+    type: oci:core:vcn:id
+    title: Virtual Cloud Network
+    dependsOn:
+      compartmentId: ${vcnCompartment}
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+  
+  subnetCompartment:
+    type: oci:identity:compartment:id
+    title: Private Subnet Compartment
+    default: vcnCompartment
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+
+  redis_subnet_OCID:
+    type: oci:core:subnet:id
+    dependsOn:
+      compartmentId: ${subnetCompartment}
+      vcnId: ${vcnDeployment}
+      hidePublicSubnet: true
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+    title: "Redis Private Subnet"
+
+  subnetCompartmentapi:
+    type: oci:identity:compartment:id
+    title: API Gateway Subnet Compartment
+    default: vcnCompartment
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+
+  api_gateway_subnec_OCID:
+    type: oci:core:subnet:id
+    dependsOn:
+      compartmentId: ${subnetCompartmentapi}
+      vcnId: ${vcnDeployment}
+    requited: false
+    visible: 
+      eq: 
+      - create_new_network
+      - false
+    title: "API Gateway Subnet"
+  
+  create_private_endpoint:
+    type: boolean
+    title: "Create new Private Endpoint for Resource Manager?"
+    required: true
+    default: true
+
+  private_endpoint_vcnCompartment:
+    type: oci:identity:compartment:id
+    title: Private Endpoint VCN Compartment
+    visible: 
+      eq: 
+      - create_private_endpoint
+      - false  
+
+  private_endpoint_vcn:
+    type: oci:core:vcn:id
+    title: Private Endpoint Virtual Cloud Network
+    dependsOn:
+      compartmentId: ${private_endpoint_vcnCompartment}
+    visible: 
+      eq: 
+      - create_private_endpoint
+      - false
+
+  private_endpoint_Compartment: 
+    type: oci:identity:compartment:id
+    title: Private Endpoint Compartment
+    default: private_endpoint_vcnCompartment
+    visible: 
+      eq: 
+      - create_private_endpoint
+      - false
+
+  private_endpoint_id:
+    type: oci:resourcemanager:privateendpoint:id
+    dependsOn:
+      compartmentId: ${private_endpoint_Compartment}
+      vcnId: ${private_endpoint_vcn}
+    requited: false
+    visible: 
+      eq: 
+      - create_private_endpoint
+      - false
+    title: "Private Endpoint"
+
+# Vault
+
+  create_new_vault:
+    type: boolean
+    title: "Create new Vault?"
+    required: true
+    default: true
+  
+  vault_name:
+    type: string
+    requited: false
+    visible: create_new_vault
+    title: "Vault Name"
+    default: "Api Gateway"
+  
+  key_name:
+    type: string
+    requited: false
+    visible: create_new_vault
+    title: "Secret Name"
+    default: "Redis Key"
+
+  secret_name:
+    type: string
+    requited: false
+    visible: true
+    title: "Key Name"
+    default: "Redis_Pass"
+
+  vaultCompartment:
+    type: oci:identity:compartment:id
+    title: Vault Comapartment
+    visible: 
+      eq: 
+      - create_new_vault
+      - false
+
+  vault_id:
+    type: oci:kms:vault:id
+    dependsOn:
+      compartmentId: ${vaultCompartment}
+    visible: 
+      eq: 
+      - create_new_vault
+      - false
+    title: "Vault to Store Redis Credentials"
+
+  keyCompartment:
+    type: oci:identity:compartment:id
+    title: Key Comapartment
+    default: vaultCompartment
+    visible: 
+      eq: 
+      - create_new_vault
+      - false
+
+  key_id:
+    type: oci:kms:key:id
+    dependsOn:
+      compartmentId: ${keyCompartment}
+      vaultId: ${vault_id}
+    visible: 
+      eq: 
+      - create_new_vault
+      - false
+    title: "Key to Encrypt Redis Credentials"
