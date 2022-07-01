@@ -6,6 +6,8 @@ No API Gateway do OCI, é possível construir uma arquitetura onde se utiliza um
 
 ## Diagrama da Arquitetura
 
+Nessa arquitetura o API Gateway acessa o Redis através da VCN e se autentica com a senha que obtém através do secret que está armazenado no Vault do OCI.
+
 ## Pré requisitos
 
 - Permissão para `gerenciar` os seguintes recuros na tenancy do OCI: `vcns`, `internet-gateway`, `route-tables`, `nat-gateway`, `service-gateway`, `security-lists`, `subnets`, `intances`, `private-endpoint`, `api-gateway`, `kms-vault`, `kms-key` and `kms-secrets`.
