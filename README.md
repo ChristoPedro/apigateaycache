@@ -1,8 +1,8 @@
 # Terraform OCI API Gateway Cache Com Redis
 
-API Gateway além de ser utilizado para centralizar e padronizar os APIs de diversos sistemas do backend, também pode tem a capacidade de reduzir a quantidade de chamada realizada ao backend. Tanto validando os requisitos necessários de cada chamada, como HEAD, BODY e QUERY ou através de cache para determinadas chamdas que são realizadas com frequência.
+API Gateway além de ser utilizado para centralizar e padronizar os APIs de diversos sistemas do backend, também pode tem a capacidade de reduzir a quantidade de chamada realizada ao backend. Tanto validando os requisitos necessários de cada chamada, como HEAD, BODY e QUERY ou através de cache para determinadas chamadas que são realizadas com frequência.
 
-No API Gateway do OCI, é possivel contruir uma arquiteura onde se utiliza um banco Redis stand anlone para guardar o cache das chamadas, assim quando uma chamada recorrente é soliciada durante o tempo de TTL na rota, ela é tratada na camada do API Gateway e não do Backend, reduzindo assim a quantidade de dados processados e o tempo de resposta das APIs.
+No API Gateway do OCI, é possível construir uma arquitetura onde se utiliza um banco Redis stand anlone para guardar o cache das chamadas, assim quando uma chamada recorrente é solicitada durante o tempo de TTL na rota, ela é tratada na camada do API Gateway e não do Backend, reduzindo assim a quantidade de dados processados e o tempo de resposta das APIs.
 
 ## Diagrama da Arquitetura
 
@@ -16,3 +16,4 @@ No API Gateway do OCI, é possivel contruir uma arquiteura onde se utiliza um ba
 
 ## Deploy com Oracle Resource Manager
 
+1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/ChristoPedro/apigateaycache/releases/download/latest/ApiGatewayCache.zip)
