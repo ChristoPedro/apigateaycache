@@ -21,7 +21,7 @@ resource "oci_vault_secret" "redis_secret" {
     compartment_id = var.compartment_id
     secret_content {
         content_type = "BASE64"
-        content      = base64encode(random_string.redis_password.result)
+        content      = base64encode(jsonencode({"password":random_string.redis_password.result}))
     }
     secret_name = var.secret_name
     vault_id    = var.vault_id != "" ? var.vault_id : oci_kms_vault.apigw_vault[0].id

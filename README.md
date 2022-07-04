@@ -6,6 +6,8 @@ No API Gateway do OCI, é possível construir uma arquitetura onde se utiliza um
 
 ## Diagrama da Arquitetura
 
+![Arquitetura](/images/arquitetura.png)
+
 Nessa arquitetura o API Gateway acessa o Redis através da VCN e se autentica com a senha que obtém através do secret que está armazenado no Vault do OCI.
 
 ## Pré requisitos
@@ -18,4 +20,4 @@ Nessa arquitetura o API Gateway acessa o Redis através da VCN e se autentica co
 
 ## Deploy com Oracle Resource Manager
 
-1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/ChristoPedro/apigatewaycache/releases/download/latest/ApiGatewayCache.zip)
+1. **Click** [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/ChristoPedro/apigatewaycache/releases/download/latest/ApiGatewayCache.zip)
