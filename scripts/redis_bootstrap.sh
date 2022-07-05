@@ -28,11 +28,11 @@ always-show-logo yes
 save 900 1
 save 300 10
 save 60 10000
-stop-writes-on-bgsave-error yes
+stop-writes-on-bgsave-error no
 rdbcompression yes
 rdbchecksum yes
 dbfilename dump.rdb
-dir ./
+dir /etc
 replica-serve-stale-data yes
 replica-read-only yes
 repl-diskless-sync no
