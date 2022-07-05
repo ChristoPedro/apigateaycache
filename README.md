@@ -25,5 +25,3 @@ Nessa arquitetura o API Gateway acessa o Redis através da VCN e se autentica co
 ## Deploy com Oracle Resource Manager
 
 1. **Click** [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/ChristoPedro/apigatewaycache/releases/download/latest/ApiGatewayCache.zip)
-
-## Utilizando 
