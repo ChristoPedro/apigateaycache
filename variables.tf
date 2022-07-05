@@ -1,4 +1,5 @@
 variable "tenancy_ocid" {}
+variable "region" {}
 variable "availablity_domain_name" {}
 variable "compartment_id" {}
 variable "redis_subnet_OCID"{
@@ -86,4 +87,12 @@ variable "create_private_endpoint"{
 
 variable "vcnDeployment"{
     default = ""
+}
+
+variable "create_new_dynamic_group_apigw"{
+    default = true
+}
+
+variable "create_dg_policies"{
+    default = true
 }

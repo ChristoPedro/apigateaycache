@@ -4,6 +4,10 @@ API Gateway além de ser utilizado para centralizar e padronizar os APIs de dive
 
 No API Gateway do OCI, é possível construir uma arquitetura onde se utiliza um banco Redis stand anlone para guardar o cache das chamadas, assim quando uma chamada recorrente é solicitada durante o tempo de TTL na rota, ela é tratada na camada do API Gateway e não do Backend, reduzindo assim a quantidade de dados processados e o tempo de resposta das APIs.
 
+## Arquitetura
+
+Esse código terraform tem como objetivo criar um ambiente para testes de cache para API Gateway. Será criado um banco Redis stand alone em uma VM, um API Gateway e um deployment já configurados com cache para serem testados e as dependencias necessárias de rede de políticas para a configuração do ambiente.
+
 ## Diagrama da Arquitetura
 
 ![Arquitetura](/images/arquitetura.png)
@@ -21,3 +25,5 @@ Nessa arquitetura o API Gateway acessa o Redis através da VCN e se autentica co
 ## Deploy com Oracle Resource Manager
 
 1. **Click** [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/ChristoPedro/apigatewaycache/releases/download/latest/ApiGatewayCache.zip)
+
+## Utilizando 

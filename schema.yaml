@@ -70,6 +70,12 @@ variableGroups:
   - key_id
   - secret_name
 
+- title: Identity 
+  visible: true
+  variables:
+  - create_new_dynamic_group_apigw
+  - create_dg_policies
+
 variables:
 
   create_api_gw:
@@ -360,3 +366,21 @@ variables:
       - create_new_vault
       - false
     title: "Key to Encrypt Redis Credentials"
+
+# Identity
+
+  create_new_dynamic_group_apigw:
+      type: boolean
+      title: "Create New Dynamic Group?"
+      required: true
+      default: true
+
+  create_dg_policies:
+      type: boolean
+      title: "Create The Necessary Policies?"
+      required: true
+      default: true
+      visible: 
+      eq: 
+      - create_new_dynamic_group_apigw
+      - false

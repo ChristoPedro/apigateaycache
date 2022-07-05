@@ -1,3 +1,18 @@
+data "oci_identity_tenancy" "tenant_details" {
+  tenancy_id = var.tenancy_ocid
+
+  provider = oci.current_region
+}
+
+data "oci_identity_regions" "home_region" {
+  filter {
+    name   = "key"
+    values = [data.oci_identity_tenancy.tenant_details.home_region_key]
+  }
+
+  provider = oci.current_region
+}
+
 data "oci_core_images" "osimage" {
     compartment_id = var.compartment_id
     operating_system = "Oracle Linux"

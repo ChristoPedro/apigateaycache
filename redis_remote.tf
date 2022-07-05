@@ -10,6 +10,10 @@ data "template_file" "redis_bootstrap" {
 resource "null_resource" "redis_bootstrap" {
   depends_on = [oci_core_instance.redis]
 
+  triggers = {
+    intance_id = oci_core_instance.redis.id
+  }
+
   provisioner "file" {
     connection {
       type        = "ssh"
