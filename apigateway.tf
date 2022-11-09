@@ -65,4 +65,5 @@ resource oci_apigateway_deployment Deployment-Cache {
       }
     }
   }
+  count = var.create_api_gw ? 1 : 0
 }
